@@ -15,9 +15,9 @@ class _State extends State<MyApp> {
 
   String _value = "Hello world";
 
-  void _onPressed(String value){
+  void _onPressed(){
     setState(() {
-          _value = value;
+          _value = new DateTime.now().toString();
         });
   }
 
@@ -33,10 +33,8 @@ class _State extends State<MyApp> {
           child: new Column(
             children: <Widget>[
               new Text(_value),
-              new RaisedButton(
-                onPressed: () => _onPressed("Приуэт!!!"),
-                child: new Text("Click me!"),
-              ),
+              new RaisedButton(onPressed: _onPressed,child: new Text("Click me!"),),
+              new FlatButton(onPressed: _onPressed,child: new Text("Click me!"),),
             ],
           ),
         ),
