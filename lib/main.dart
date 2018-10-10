@@ -13,31 +13,11 @@ class MyApp extends StatefulWidget {
 
 class _State extends State<MyApp> {
 
-  int _value1 = 0;
-  int _value2 = 0;
+  bool _value1 = false;
+  bool _value2 = false;
 
-  void _setValue1(int value) => setState(()=> _value1 = value);
-  void _setValue2(int value) => setState(()=> _value2 = value);
-
-  Widget radioWidget(){
-    List<Widget> _list = new List();
-    for(int i = 0; i <3; i++){
-      _list.add(new Radio( value: i, groupValue: _value1, onChanged: _setValue1,));
-    }
-    Column _column = new Column( children: _list,);
-
-    return _column;
-  }
-
-   Widget radioWidgetList(){
-    List<Widget> _list = new List();
-    for(int i = 0; i <3; i++){
-      _list.add(new RadioListTile( value: i, groupValue: _value2, onChanged: _setValue2, activeColor: Colors.lime[100], title: Text('$i'), subtitle: Text('Just Subtitle'), controlAffinity: ListTileControlAffinity.trailing,));
-    }
-    Column _column = new Column( children: _list,);
-
-    return _column;
-  }
+  void _getChange1(bool value) => setState((){ _value1 = value; });
+  void _getChange2(bool value) => setState((){ _value2 = value; });
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +30,9 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              radioWidget(),
-              radioWidgetList(),
+              new Switch( value: _value1, onChanged: _getChange1, activeColor: Colors.red,),
+              new SwitchListTile(value: _value2, onChanged: _getChange2, activeColor: Colors.green,
+               title: new Text('Switched Text', style: TextStyle( fontWeight: FontWeight.bold, color: Colors.cyan,),),)
             ],
           ),
         ),
