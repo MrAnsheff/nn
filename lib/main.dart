@@ -13,19 +13,30 @@ class MyApp extends StatefulWidget {
 
 class _State extends State<MyApp> {
 
-  bool _value1 = false;
-  bool _value2 = false;
+  int _value1 = 0;
+  int _value2 = 0;
 
-  void _value1Changed(bool value){
-    setState((){
-      _value1 = value;
-    });
+  void _setValue1(int value) => setState(()=> _value1 = value);
+  void _setValue2(int value) => setState(()=> _value2 = value);
+
+  Widget radioWidget(){
+    List<Widget> _list = new List();
+    for(int i = 0; i <3; i++){
+      _list.add(new Radio( value: i, groupValue: _value1, onChanged: _setValue1,));
+    }
+    Column _column = new Column( children: _list,);
+
+    return _column;
   }
 
-   void _value2Changed(bool value){
-    setState((){
-      _value2 = value;
-    });
+   Widget radioWidgetList(){
+    List<Widget> _list = new List();
+    for(int i = 0; i <3; i++){
+      _list.add(new RadioListTile( value: i, groupValue: _value2, onChanged: _setValue2, activeColor: Colors.lime[100], title: Text('$i'), subtitle: Text('Just Subtitle'), controlAffinity: ListTileControlAffinity.trailing,));
+    }
+    Column _column = new Column( children: _list,);
+
+    return _column;
   }
 
   @override
@@ -39,11 +50,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              Checkbox(value: _value1, onChanged: _value1Changed,),
-              CheckboxListTile( value: _value2, onChanged: _value2Changed,
-              controlAffinity: ListTileControlAffinity.leading, title: new Text('Hello World!'),
-              subtitle: new Text('Subtitle'), secondary: new Icon(Icons.payment), activeColor: Colors.pink,),
-
+              radioWidget(),
+              radioWidgetList(),
             ],
           ),
         ),
