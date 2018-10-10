@@ -13,12 +13,9 @@ class MyApp extends StatefulWidget {
 
 class _State extends State<MyApp> {
 
-  bool _value1 = false;
-  bool _value2 = false;
+  double _value = 0.0;
 
-  void _getChange1(bool value) => setState((){ _value1 = value; });
-  void _getChange2(bool value) => setState((){ _value2 = value; });
-
+  void _onChanged(double value) => setState((){_value = value;});
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -30,9 +27,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Switch( value: _value1, onChanged: _getChange1, activeColor: Colors.red,),
-              new SwitchListTile(value: _value2, onChanged: _getChange2, activeColor: Colors.green,
-               title: new Text('Switched Text', style: TextStyle( fontWeight: FontWeight.bold, color: Colors.cyan,),),)
+              new Text('Slider: ${(_value*100).round()}'),
+              new Slider(value: _value, onChanged: _onChanged,)
             ],
           ),
         ),
