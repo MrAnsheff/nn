@@ -12,27 +12,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  void _showBottom(){
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return new Container(
-          padding: EdgeInsets.all(32.0),
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text('This is Bottom', style: new TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
-              new RaisedButton(onPressed: () => Navigator.pop(context), child: new Text('Click me'),),
-            ],
-          ),
-        );
-      },
-    );
+  void _onPressed(){
+    _scaffoldState.currentState.showSnackBar(new SnackBar(content: new Text("It's Snack Bar!"),));
   }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldState,
       appBar: new AppBar(
         title: new Text('Name Here'),
       ),
@@ -42,7 +31,7 @@ class _State extends State<MyApp> {
           child: new Column(
             children: <Widget>[
               new Text('All Widgets Here'),
-              new RaisedButton(onPressed: _showBottom, child: new Text('Show Bottom!')),
+              new RaisedButton(onPressed: _onPressed, child: new Text('Open Snack Bar')),
             ],
           ),
         ),
