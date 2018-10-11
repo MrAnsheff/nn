@@ -12,29 +12,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+  
+  String _value = '';
 
-  int _value = 0;
-
-  void _add() => setState((){_value++;});
-  void _remove() => setState((){_value--;});
+  void _add() => setState((){_value = DateTime.now().toString();});
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Name Here'),
-        backgroundColor: Colors.green,
-        actions: <Widget>[
-          new IconButton( icon: new Icon(Icons.add), onPressed: _add,),
-          new IconButton( icon: new Icon(Icons.remove), onPressed: _remove,),
-        ],
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: _add,
+        backgroundColor: Colors.red,
+        child: new Icon(Icons.add),
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text(_value.toString(), style: new TextStyle( fontWeight: FontWeight.bold, fontSize: 37.0,)),
+              new Text(_value),
             ],
           ),
         ),
