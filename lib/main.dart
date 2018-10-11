@@ -17,13 +17,15 @@ class _State extends State<MyApp> {
   Future _showDialog(BuildContext context, String message) async{
     return showDialog(
       context: context,
-      child: AlertDialog(
+      builder: (context){
+        return new AlertDialog(
         title: new Text(message),
         actions: <Widget>[
           new FlatButton(onPressed: () => Navigator.pop(context), child: new Text('Ok!'),),
         ],
-      ),
-    );
+      );
+      });
+    
   }
 
   @override
