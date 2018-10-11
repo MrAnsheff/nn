@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -12,16 +13,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
-  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  void _onPressed(){
-    _scaffoldState.currentState.showSnackBar(new SnackBar(content: new Text("It's Snack Bar!"),));
+  Future _showDialog(BuildContext context, String message) async{
+    return showDialog(
+      context: context,
+      child: AlertDialog(
+        title: new Text(message),
+        actions: <Widget>[
+          new FlatButton(onPressed: () => Navigator.pop(context), child: new Text('Ok!'),),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      key: _scaffoldState,
       appBar: new AppBar(
         title: new Text('Name Here'),
       ),
@@ -31,7 +38,7 @@ class _State extends State<MyApp> {
           child: new Column(
             children: <Widget>[
               new Text('All Widgets Here'),
-              new RaisedButton(onPressed: _onPressed, child: new Text('Open Snack Bar')),
+              new RaisedButton(onPressed: () => _showDialog(context, "Do you like Flutter?"), child: new Text("Show"))
             ],
           ),
         ),
