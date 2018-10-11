@@ -13,33 +13,28 @@ class MyApp extends StatefulWidget {
 
 class _State extends State<MyApp> {
 
-  String _value = '';
-  List<BottomNavigationBarItem> _items;
-  int _index = 0;
-
-  @override
-    void initState() {
-      // TODO: implement initState
-      _items = new List();
-      _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.kitchen), title: new Text("Kitchen")));
-      _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.keyboard), title: new Text("Keyboard")));
-      _items.add(new BottomNavigationBarItem(icon: new Icon(Icons.input), title: new Text("Input")));
-
-    }
-
+  void _showBottom(){
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return new Container(
+          padding: EdgeInsets.all(32.0),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text('This is Bottom', style: new TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+              new RaisedButton(onPressed: () => Navigator.pop(context), child: new Text('Click me'),),
+            ],
+          ),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Name Here'),
-      ),
-      bottomNavigationBar: new BottomNavigationBar(
-        items: _items,
-        currentIndex: _index,
-        onTap: (int item) => setState((){
-          _index = item;
-          _value = "Current vaule is $_index";
-        }),
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
@@ -47,6 +42,7 @@ class _State extends State<MyApp> {
           child: new Column(
             children: <Widget>[
               new Text('All Widgets Here'),
+              new RaisedButton(onPressed: _showBottom, child: new Text('Show Bottom!')),
             ],
           ),
         ),
