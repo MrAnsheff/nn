@@ -12,28 +12,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
-  
-  String _value = '';
-
-  void _add() => setState((){_value = DateTime.now().toString();});
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Name Here'),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _add,
-        backgroundColor: Colors.red,
-        child: new Icon(Icons.add),
+      drawer: new Drawer(
+        child: new Container(
+          padding: EdgeInsets.all(32.0),
+          child: new Column(
+            children: <Widget>[
+              new Text('This is the Drawer'),
+              new RaisedButton(onPressed: () => Navigator.pop(context), child: new Text('Close Drawer'),),
+            ],
+          ),
+        ),
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text(_value),
+              new Text('All Widgets Here'),
             ],
           ),
         ),
