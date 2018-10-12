@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -12,45 +11,22 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
-enum Answers{YES,NO,MAYBE}
-
 class _State extends State<MyApp> {
 
   String _value = "";
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  void _setValue(String value) => setState((){_value = value;});
+  void _setName(String value) => setState((){_value = value;});
 
-  Future _askUser() async{
-    switch (
-      await showDialog(
-        context: context,
-        child: new SimpleDialog(
-          title: new Text("Do you like Flutter?"),
-          children: <Widget>[
-            new SimpleDialogOption(child: new Text('Yes!!!'), onPressed: (){Navigator.pop(context, Answers.YES);},),
-            new SimpleDialogOption(child: new Text('No %('), onPressed: (){Navigator.pop(context, Answers.NO);},),
-            new SimpleDialogOption(child: new Text('Maybe :|'), onPressed: (){Navigator.pop(context, Answers.MAYBE);},),
-          ],
-        ),
-      )
-    ) {
-      case Answers.YES: _setValue("Yes");
-        
-        break;
-      case Answers.NO: _setValue("No");
-        
-        break;
+  void _openSnack(){
+    _scaffoldState.currentState.showSnackBar(new SnackBar(content: new Text(_value),));
 
-      case Answers.MAYBE: _setValue("Maybe");
-        
-        break;
-
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldState,
       appBar: new AppBar(
         title: new Text('Name Here'),
       ),
@@ -59,8 +35,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text(_value),
-              new RaisedButton(onPressed: _askUser, child: new Text('Click me'),),
+              new TextField(onChanged: _setName),
+              new RaisedButton(child: new Text("Send to SnackBar"), onPressed: _openSnack,),
             ],
           ),
         ),
