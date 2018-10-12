@@ -12,20 +12,40 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
+enum Answers{YES,NO,MAYBE}
+
 class _State extends State<MyApp> {
 
-  Future _showDialog(BuildContext context, String message) async{
-    return showDialog(
-      context: context,
-      builder: (context){
-        return new AlertDialog(
-        title: new Text(message),
-        actions: <Widget>[
-          new FlatButton(onPressed: () => Navigator.pop(context), child: new Text('Ok!'),),
-        ],
-      );
-      });
-    
+  String _value = "";
+
+  void _setValue(String value) => setState((){_value = value;});
+
+  Future _askUser() async{
+    switch (
+      await showDialog(
+        context: context,
+        child: new SimpleDialog(
+          title: new Text("Do you like Flutter?"),
+          children: <Widget>[
+            new SimpleDialogOption(child: new Text('Yes!!!'), onPressed: (){Navigator.pop(context, Answers.YES);},),
+            new SimpleDialogOption(child: new Text('No %('), onPressed: (){Navigator.pop(context, Answers.NO);},),
+            new SimpleDialogOption(child: new Text('Maybe :|'), onPressed: (){Navigator.pop(context, Answers.MAYBE);},),
+          ],
+        ),
+      )
+    ) {
+      case Answers.YES: _setValue("Yes");
+        
+        break;
+      case Answers.NO: _setValue("No");
+        
+        break;
+
+      case Answers.MAYBE: _setValue("Maybe");
+        
+        break;
+
+    }
   }
 
   @override
@@ -39,8 +59,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('All Widgets Here'),
-              new RaisedButton(onPressed: () => _showDialog(context, "Do you like Flutter?"), child: new Text("Show"))
+              new Text(_value),
+              new RaisedButton(onPressed: _askUser, child: new Text('Click me'),),
             ],
           ),
         ),
