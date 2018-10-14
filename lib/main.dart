@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(new MaterialApp(
@@ -12,8 +15,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+  Map _countries = new Map();
+
+
+
+  void _getCountries() async {
+    var url = "http://country.io/names.json";
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _countries = json.decode(response.body);
+        print(_countries.length);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Name Here'),
@@ -21,48 +41,28 @@ class _State extends State<MyApp> {
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
-          child: new Column(
-            children: <Widget>[
-
-              new Card(
+          child: new ListView.builder(
+            itemCount: _countries.length,
+            itemBuilder: (BuildContext context, int index){
+              String key = _countries.keys.elementAt(index);
+              return Card(
                 child: new Container(
                   padding: EdgeInsets.all(32.0),
-                  child: new Column(
-                    children: <Widget>[
-                    new Text("First Line"),
-                    new Text("Second Line"),
-                    ],
-                  ),
+                  child: new Text('$key : ${_countries[key]}'),
                 ),
-              ),
-              new Card(
-                child: new Container(
-                  padding: EdgeInsets.all(32.0),
-                  child: new Column(
-                    children: <Widget>[
-                    new Text("First Line"),
-                    new Text("Second Line"),
-                    ],
-                  ),
-                ),
-              ),
-              new Card(
-                child: new Container(
-                  padding: EdgeInsets.all(32.0),
-                  child: new Column(
-                    children: <Widget>[
-                    new Text("First Line"),
-                    new Text("Second Line"),
-                    ],
-                  ),
-                ),
-              ),
-
-
-            ],
+              );
+            },
           ),
         ),
       ),
     );
   }
+
+   
+ @override 
+ void initState() {
+     // TODO: implement initState
+     _getCountries();
+   }
+   
 }
