@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -11,39 +12,34 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
-enum Animals{Cat,Dog,Fish,Carrot}
-
 class _State extends State<MyApp> {
-
-  String _select = "Make a selection";
-  Animals _selected = Animals.Cat;
-  List<PopupMenuEntry<Animals>> _items = new List<PopupMenuEntry<Animals>>();
+  
+  static Duration duration = new Duration(milliseconds: 100);
+  Timer timer;
+  double _value = 0.0;
+  bool isit = false;
 
   @override
     void initState() {
       // TODO: implement initState
-      for(Animals animal in Animals.values){
-        _items.add(new PopupMenuItem(
-          child: new Text(_getDisplay(animal)),
-          value: animal,
-        ));
-      }
+      timer = new Timer.periodic(duration, _timeout);
     }
 
-  void _onSelected(Animals animal){
+  void _timeout(Timer timer){
+    if(!isit) return;
     setState(() {
-          _selected = animal;
-          _select = "You select ${_getDisplay(animal)}";
+          _value = _value + 0.01;
+          if(_value == 1.0) isit = false;
         });
   }
 
-  String _getDisplay(Animals animal){
-    int index = animal.toString().indexOf('.');
-    index++;
-    return animal.toString().substring(index);
+  void _onPressed(){
+    setState(() {
+          isit = true;
+          _value = 0.0;
+        });
+  }
 
-  }  
-  
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -53,20 +49,18 @@ class _State extends State<MyApp> {
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
-          child: new Row(
+          child: new Column(
             children: <Widget>[
-              new Text(_select),
-              new PopupMenuButton<Animals>(
-                child: new Icon(Icons.explore),
-                initialValue: Animals.Cat,
-                onSelected: _onSelected,
-                itemBuilder: (BuildContext context){
-                  return _items;
-                },
-
-              )
+              new LinearProgressIndicator(
+                value: _value,
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.purpleAccent),
+              ),
+              new RaisedButton(
+                onPressed: _onPressed,
+                child: new Text("Start"),
+              ),
             ],
-          )
+          ),
         ),
       ),
     );
