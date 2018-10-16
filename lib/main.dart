@@ -11,12 +11,38 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
+enum Animals{Cat,Dog,Fish,Carrot}
+
 class _State extends State<MyApp> {
 
-  double _value = 0.0;
+  String _select = "Make a selection";
+  Animals _selected = Animals.Cat;
+  List<PopupMenuEntry<Animals>> _items = new List<PopupMenuEntry<Animals>>();
 
-  void _onChanged(double value) => setState((){_value = value;});
-  
+  @override
+    void initState() {
+      // TODO: implement initState
+      for(Animals animal in Animals.values){
+        _items.add(new PopupMenuItem(
+          child: new Text(_getDisplay(animal)),
+          value: animal,
+        ));
+      }
+    }
+
+  void _onSelected(Animals animal){
+    setState(() {
+          _selected = animal;
+          _select = "You select ${_getDisplay(animal)}";
+        });
+  }
+
+  String _getDisplay(Animals animal){
+    int index = animal.toString().indexOf('.');
+    index++;
+    return animal.toString().substring(index);
+
+  }  
   
   @override
   Widget build(BuildContext context) {
@@ -27,26 +53,20 @@ class _State extends State<MyApp> {
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
-          child: new Column(
+          child: new Row(
             children: <Widget>[
-              new Slider(value: _value, onChanged: _onChanged,),
-              new Container(
-                padding: EdgeInsets.all(32.0),
-                child: new LinearProgressIndicator(
-                  value: _value,
-                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-                )
-              ),
-              new Container(
-                padding: EdgeInsets.all(32.0),
-                child: new CircularProgressIndicator(
-                  value: _value,
-                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.red),
-                )
-              ),
+              new Text(_select),
+              new PopupMenuButton<Animals>(
+                child: new Icon(Icons.explore),
+                initialValue: Animals.Cat,
+                onSelected: _onSelected,
+                itemBuilder: (BuildContext context){
+                  return _items;
+                },
 
+              )
             ],
-          ),
+          )
         ),
       ),
     );
