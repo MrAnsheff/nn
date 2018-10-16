@@ -6,69 +6,76 @@ void main() {
   ));
 }
 
-class MyApp extends StatefulWidget{
+class MyApp extends StatefulWidget {
   @override
   State createState() => new _State();
 }
 
-class Choice{
-  String title;
-  IconData icon;
-
-  Choice(this.title, this.icon);
-}
-
-class _State extends State<MyApp> with SingleTickerProviderStateMixin{
-
-  TabController _controller;
-  List<Choice> _items =  <Choice>[
-   Choice("CAR", Icons.directions_car),
-   Choice("BICYCLE", Icons.directions_bike),
-   Choice("BOAT", Icons.directions_boat),
-   Choice("BUS", Icons.directions_bus),
-   Choice("TRAIN", Icons.directions_railway),
-   Choice("WALK", Icons.directions_walk),
-  ];
+class _State extends State<MyApp> {
+  List<Step> _steps;
+  int _current;
 
   @override
     void initState() {
       // TODO: implement initState
-      _controller = new TabController(length: _items.length, vsync: this);
+      _current = 0;
+        _steps = <Step>[
+    new Step(title: new Text('Step 1'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 2'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 3'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 1'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 2'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 3'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 1'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 2'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 3'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 1'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 2'), content: new Text('Doing Something'), isActive: true),
+    new Step(title: new Text('Step 3'), content: new Text('Doing Something'), isActive: true),
+  ];
     }
+  
+  void _stepContinue(){
+    setState(() {
+          _current++;
+          if(_current >= _steps.length) _current = _steps.length -1; 
+        });
+
+  }
+
+  void _stepCancel(){
+    setState(() {
+          _current--;
+          if(_current < 0) _current = 0; 
+        });
+  }
+
+  void _onTapped(int index){
+        setState(() {
+          _current = index;
+           
+        });
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Name Here'),
-        bottom: new PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
-          child: new Theme(
-            data: Theme.of(context).copyWith(accentColor: Colors.white),
-            child: new Container(
-              height: 48.0,
-              alignment: Alignment.center,
-              child: new TabPageSelector(controller: _controller,),
-            ),
-          ),
-        ),
       ),
-      body: new TabBarView(
-        controller: _controller,
-        children: _items.map((Choice item){
-          return new Container(
-            padding: EdgeInsets.all(25.0),
-            child: new Center(
-              child: new Column(
-                children: <Widget>[
-                  new Text(item.title),
-                  new Container(padding: EdgeInsets.only(top: 20.0)),
-                  new Icon(item.icon, size: 120.0,),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+      body: new Container(
+        padding: new EdgeInsets.all(32.0),
+        child: new Center(
+          child: new Stepper(
+            steps: _steps,
+            currentStep: _current,
+            onStepContinue: _stepContinue,
+            onStepCancel: _stepCancel,
+            onStepTapped: _onTapped,
+            )
+        ),
       ),
     );
   }
