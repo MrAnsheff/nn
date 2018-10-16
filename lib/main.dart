@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
@@ -12,32 +11,42 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
+class MyItem {
+  bool isExpanded;
+  String header;
+  Widget body;
+
+  MyItem(this.isExpanded, this.header, this.body);
+}
+
 class _State extends State<MyApp> {
-  
-  static Duration duration = new Duration(milliseconds: 100);
-  Timer timer;
-  double _value = 0.0;
-  bool isit = false;
+  List<MyItem> _items = new List<MyItem>();
 
   @override
-    void initState() {
-      // TODO: implement initState
-      timer = new Timer.periodic(duration, _timeout);
+  void initState() {
+    // TODO: implement initState
+    for (int i = 0; i < 10; i++) {
+      _items.add(new MyItem(
+          false,
+          'Item $i',
+          new Container(
+            padding: EdgeInsets.all(10.0),
+            child: new Text('Item'),
+          )));
     }
-
-  void _timeout(Timer timer){
-    if(!isit) return;
-    setState(() {
-          _value = _value + 0.01;
-          if(_value == 1.0) isit = false;
-        });
   }
 
-  void _onPressed(){
-    setState(() {
-          isit = true;
-          _value = 0.0;
-        });
+  ExpansionPanel _createItem(MyItem item) {
+    return new ExpansionPanel(
+      headerBuilder: (BuildContext context, bool isExpanded) {
+        return new Container(
+          padding: EdgeInsets.all(5.0),
+          child: new Text('Header ${item.header}'),
+        );
+      },
+      body: item.body,
+      isExpanded: item.isExpanded,
+    );
   }
 
   @override
@@ -48,20 +57,20 @@ class _State extends State<MyApp> {
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
-        child: new Center(
-          child: new Column(
-            children: <Widget>[
-              new LinearProgressIndicator(
-                value: _value,
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.purpleAccent),
-              ),
-              new RaisedButton(
-                onPressed: _onPressed,
-                child: new Text("Start"),
-              ),
-            ],
-          ),
-        ),
+        child: new ListView(
+          children: <Widget>[
+            new ExpansionPanelList(
+              expansionCallback: (int index, bool isExpanded){
+                setState(() {
+                   _items[index].isExpanded = !_items[index].isExpanded;               
+                                });
+                
+              },
+              children: _items.map(_createItem).toList(),
+            ),
+          ],
+        )
+      
       ),
     );
   }
