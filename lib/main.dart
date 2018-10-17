@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 void main() {
   runApp(new MaterialApp(
@@ -12,52 +13,42 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
-class Area{
-  int index;
-  String name;
-  Color color;
-  Area({this.index: -1, this.name: "Area", this.color: Colors.lightBlueAccent});
-
+class Sales{
+  String year;
+  int sales;
+  Sales(this.year, this.sales);
 }
 
 class _State extends State<MyApp> {
-  int _location;
-  List<Area> _areas;
+  List<Sales> _data;
+  List<charts.Series<Sales, String>> _chartData;
 
   @override
     void initState() {
       // TODO: implement initState
-      _areas = new List<Area>();
-      for(int i = 0; i < 16; i++){
-        _areas.add(new Area(index: i, name: "Area $i"));
-      }
-
-      var rnd = new Random();
-      _location = rnd.nextInt(_areas.length);
+      _makeData();
     }
 
-  Widget _generate(int index){
-    return new GridTile(
-      child: new Container(
-        padding: EdgeInsets.all(5.0),
-        child: new RaisedButton(
-          onPressed: () => _onPressed(index),
-          color: _areas[index].color,
-          child:  new Text(_areas[index].name, textAlign: TextAlign.center,),
-        ),
-      ),
-    );
-  }
+    void _makeData(){
+      _data = new List<Sales>();
+      _chartData = new List<charts.Series<Sales, String>>();
 
-  void _onPressed(int index){
-    setState(() {
-          if(index == _location){
-            _areas[index].color = Colors.green;
-          } else {
-            _areas[index].color = Colors.red;
-          }
-        });
-  }
+      var rnd = new Random();
+      for(var i = 2010; i<2019 ; i ++){
+        _data.add(new Sales(i.toString(), rnd.nextInt(1000)));
+      }
+      
+      _chartData.add(new charts.Series(
+        id: "Sales",
+        data: _data,
+        colorFn: (_,__) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (Sales sales,__) => sales.year,
+        measureFn: (Sales sales,__) => sales.sales,
+        fillPatternFn: (_,__) => charts.FillPatternType.solid,
+        displayName: "sales",
+      ));
+
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +59,12 @@ class _State extends State<MyApp> {
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
-          child: new GridView.count(
-            crossAxisCount: 4,
-            children: new List<Widget>.generate(16, _generate),
-            )
+          child: new Column(
+            children: <Widget>[
+              new Text('Chart is here'),
+              new Expanded(child: new charts.BarChart(_chartData)),
+            ],
+          ),
         ),
       ),
     );
