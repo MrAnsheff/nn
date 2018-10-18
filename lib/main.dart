@@ -20,7 +20,8 @@ class Sales{
 }
 
 class _State extends State<MyApp> {
-  List<Sales> _data;
+  List<Sales> _desctops;
+  List<Sales> _navigators;
   List<charts.Series<Sales, String>> _chartData;
 
   @override
@@ -30,25 +31,38 @@ class _State extends State<MyApp> {
     }
 
     void _makeData(){
-      _data = new List<Sales>();
+
+      _desctops = new List<Sales>();
+      _navigators = new List<Sales>();
       _chartData = new List<charts.Series<Sales, String>>();
 
       var rnd = new Random();
-      for(var i = 2010; i<2019 ; i ++){
-        _data.add(new Sales(i.toString(), rnd.nextInt(1000)));
+
+      for(int i = 2014; i<2019; i++){
+        _desctops.add(new Sales(i.toString(), rnd.nextInt(1000) ));
+        _navigators.add(new Sales(i.toString(), rnd.nextInt(1000) ));
       }
-      
+
       _chartData.add(new charts.Series(
-        id: "Sales",
-        data: _data,
-        colorFn: (_,__) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (Sales sales,__) => sales.year,
-        measureFn: (Sales sales,__) => sales.sales,
-        fillPatternFn: (_,__) => charts.FillPatternType.solid,
-        displayName: "sales",
+        data: _desctops,
+        id: "desctops",
+        domainFn: (Sales sale,__) => sale.year,
+        measureFn: (Sales sale,__) => sale.sales,
+        displayName: "Desctops",
+        colorFn: (_,__) => charts.MaterialPalette.purple.shadeDefault,
       ));
 
-    }
+      _chartData.add(new charts.Series(
+        data: _navigators,
+        id: "navigators",
+        domainFn: (Sales sale,__) => sale.year,
+        measureFn: (Sales sale,__) => sale.sales,
+        displayName: "Desctops",
+        colorFn: (_,__) => charts.MaterialPalette.green.shadeDefault,
+      ));
+
+
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +76,7 @@ class _State extends State<MyApp> {
           child: new Column(
             children: <Widget>[
               new Text('Chart is here'),
-              new Expanded(child: new charts.BarChart(_chartData)),
+              new Expanded(child: new charts.BarChart(_chartData, vertical: false,)),
             ],
           ),
         ),
