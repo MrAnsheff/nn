@@ -14,15 +14,15 @@ class MyApp extends StatefulWidget {
 }
 
 class Sales{
-  String year;
+  int year;
   int sales;
-  Sales(this.year, this.sales);
+  charts.Color color;
+  Sales(this.year, this.sales, this.color);
 }
 
 class _State extends State<MyApp> {
-  List<Sales> _desctops;
-  List<Sales> _navigators;
-  List<charts.Series<Sales, String>> _chartData;
+  List<Sales> _data;
+  List<charts.Series<Sales, int>> _chartData;
 
   @override
     void initState() {
@@ -30,40 +30,24 @@ class _State extends State<MyApp> {
       _makeData();
     }
 
-    void _makeData(){
+  _makeData(){
+    _chartData = new List<charts.Series<Sales, int>>();
+    _data = <Sales>[
+      new Sales(0, 100, charts.MaterialPalette.green.shadeDefault),
+      new Sales(1, 89, charts.MaterialPalette.red.shadeDefault),
+      new Sales(2, 50, charts.MaterialPalette.blue.shadeDefault),
+      new Sales(3, 16, charts.MaterialPalette.teal.shadeDefault),
+      new Sales(4, 4, charts.MaterialPalette.yellow.shadeDefault),
+    ];
 
-      _desctops = new List<Sales>();
-      _navigators = new List<Sales>();
-      _chartData = new List<charts.Series<Sales, String>>();
-
-      var rnd = new Random();
-
-      for(int i = 2014; i<2019; i++){
-        _desctops.add(new Sales(i.toString(), rnd.nextInt(1000) ));
-        _navigators.add(new Sales(i.toString(), rnd.nextInt(1000) ));
-      }
-
-      _chartData.add(new charts.Series(
-        data: _desctops,
-        id: "desctops",
-        domainFn: (Sales sale,__) => sale.year,
-        measureFn: (Sales sale,__) => sale.sales,
-        displayName: "Desctops",
-        colorFn: (_,__) => charts.MaterialPalette.purple.shadeDefault,
-      ));
-
-      _chartData.add(new charts.Series(
-        data: _navigators,
-        id: "navigators",
-        domainFn: (Sales sale,__) => sale.year,
-        measureFn: (Sales sale,__) => sale.sales,
-        displayName: "Desctops",
-        colorFn: (_,__) => charts.MaterialPalette.green.shadeDefault,
-      ));
-
-
-      }
-
+    _chartData.add(new charts.Series(
+      id: "sales",
+      data: _data,
+      domainFn: (Sales sale,__) => sale.year,
+      measureFn: (Sales sale,__) => sale.sales,
+      colorFn: (Sales sale,__) => sale.color,
+    ));
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -75,8 +59,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('Chart is here'),
-              new Expanded(child: new charts.BarChart(_chartData, vertical: false,)),
+              new Text('Pie Chart'),
+              new Expanded(child: new charts.PieChart(_chartData, animate: true, animationDuration: new Duration(seconds: 6),)),
             ],
           ),
         ),
