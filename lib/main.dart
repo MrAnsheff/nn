@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'timecounter.dart';
+import 'auth.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -13,6 +13,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+
+  bool isAuth = false;
+
+  void _onAuth(bool value){
+    setState(() {
+          isAuth = value;
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -24,8 +33,10 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('All Widgets Here'),
-              new TimeCounter(),
+              new Auth(
+                isAuth: _onAuth,
+              ),
+              Text('Authorized: $isAuth'),
             ],
           ),
         ),
