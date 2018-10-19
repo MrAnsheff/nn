@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'auth.dart';
+import 'name.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -13,13 +13,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+  String _name;
 
-  bool isAuth = false;
-
-  void _onAuth(bool value){
+  void name(String value){
     setState(() {
-          isAuth = value;
+    _name = value;         
         });
+
   }
 
   @override
@@ -33,10 +33,13 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Auth(
-                isAuth: _onAuth,
+              new Name(
+                name: name,
               ),
-              Text('Authorized: $isAuth'),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text('Your name: $_name'),
+              ),
             ],
           ),
         ),
