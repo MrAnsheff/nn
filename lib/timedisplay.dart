@@ -23,7 +23,10 @@ class TimeDisplay extends StatelessWidget {
             style: new TextStyle(fontSize: 32.0, color: color),
           ),
         ),
-        new IconButton(icon: Icon(Icons.clear), onPressed: onClicked,),
+        new IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: onClicked,
+        ),
       ],
     );
   }
