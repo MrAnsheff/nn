@@ -23,7 +23,13 @@ class _SecondState extends State<Second> {
                 child: Text("Next"),
               ),
               RaisedButton(
-                onPressed: () => Navigator.of(context).pushNamed('/Home'),
+                onPressed: () {
+                  if(Navigator.of(context).canPop()){
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).pushNamed('/Home');
+                  }
+                },
                 child: Text("Back"),
               ),
             ],
