@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               new Text("It's home page"),
               RaisedButton(
-                onPressed: () => Navigator.of(context).pushNamed('/Second'),
+                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/Second', (Route<dynamic> route) => false),
                 child: Text("Next"),
               ),
             ],
