@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import './screens/home.dart';
 import './screens/second.dart';
-import './screens/third.dart';
 
 void main(){
   runApp(new MyApp());
@@ -15,7 +14,6 @@ class MyApp extends StatelessWidget{
       routes: <String, WidgetBuilder>{
         '/Home': (BuildContext context) => new Home(),
         '/Second': (BuildContext context) => new Second(),
-        '/Third': (BuildContext context) => new Third(),
       },
       home: new Home(),
     );
