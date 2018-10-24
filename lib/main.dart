@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget{
       title: 'Navigation',
       routes: <String, WidgetBuilder>{
         '/Home': (BuildContext context) => new Home(),
-        '/Second': (BuildContext context) => new Second(),
+
       },
       home: new Home(),
     );

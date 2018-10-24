@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../code/GlobalState.dart';
+import 'second.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,19 +9,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   
   TextEditingController name;
-  GlobalState _store = GlobalState.instance;
+
 
   @override
     void initState() {
       // TODO: implement initState
       name = new TextEditingController();
-      _store.set("name", "");
-      name.text = _store.get("name");
+
     }
   
   void onPressed(){
-    _store.set("name", name.text);
-    Navigator.of(context).pushNamed('/Second');
+
+    Navigator.push(context, new MaterialPageRoute(
+      builder: (BuildContext context) => new Second(name.text), 
+      ));
   }
 
   @override
