@@ -12,6 +12,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
+  double _x;
+  double _y;
+  double _z;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _x = 0.0;
+    _y = 0.0;
+    _z = 0.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -23,13 +35,50 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('Its an image'),
-              new Container(
-                padding: EdgeInsets.all(40.0),
-                child: null,
-                decoration: new BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent, width: 2.0),
-                  gradient: RadialGradient(colors: <Color>[Colors.blueAccent, Colors.blueGrey])
+              new Row(
+                children: <Widget>[
+                  new Text('X:'),
+                  new Slider(
+                    value: _x,
+                    onChanged: (double value) => setState(() {
+                          _x = value;
+                        }),
+                  )
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new Text('Y:'),
+                  new Slider(
+                    value: _y,
+                    onChanged: (double value) => setState(() {
+                          _y = value;
+                        }),
+                  )
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new Text('Z:'),
+                  new Slider(
+                    value: _z,
+                    onChanged: (double value) => setState(() {
+                          _z = value;
+                        }),
+                  )
+                ],
+              ),
+              new Transform(
+                transform: Matrix4.skewY(_y),
+                child: new Transform(
+                  transform: Matrix4.skewX(_x),
+                  child: new Transform(
+                    transform: Matrix4.rotationZ(_z),
+                    child: new Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: new Text("Oh NO!"),
+                    ),
+                  ),
                 ),
               )
             ],
