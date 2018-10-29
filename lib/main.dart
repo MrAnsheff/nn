@@ -12,22 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
-  int rotate;
-  double _value;
-
-  @override
-    void initState() {
-      // TODO: implement initState
-      rotate = 0;
-      _value = 0.0;
-    }
-
-  void _onChanged(double value){
-    setState(() {
-          _value = value;
-          rotate = value.toInt();
-        });
-  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -39,8 +23,15 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Slider(onChanged: _onChanged, value: _value, min: 0.0, max: 4.0,),
-              new RotatedBox(quarterTurns: rotate, child: new Text('Rotate text'),)
+              new Text('Its an image'),
+              new Container(
+                padding: EdgeInsets.all(40.0),
+                child: null,
+                decoration: new BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent, width: 2.0),
+                  gradient: RadialGradient(colors: <Color>[Colors.blueAccent, Colors.blueGrey])
+                ),
+              )
             ],
           ),
         ),
