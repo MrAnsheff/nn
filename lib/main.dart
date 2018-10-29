@@ -12,17 +12,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
-  bool _visible;
+  int rotate;
+  double _value;
 
   @override
     void initState() {
       // TODO: implement initState
-      _visible = false;
+      rotate = 0;
+      _value = 0.0;
     }
 
-  void _toggleVisible(){
+  void _onChanged(double value){
     setState(() {
-          _visible = !_visible;
+          _value = value;
+          rotate = value.toInt();
         });
   }
   @override
@@ -36,9 +39,8 @@ class _State extends State<MyApp> {
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Opacity(opacity: _visible ? 1.0: 0.2,
-              child: new Text('Now you see me?'),),
-              new RaisedButton(onPressed: _toggleVisible, child: new Text('Toggle'),),
+              new Slider(onChanged: _onChanged, value: _value, min: 0.0, max: 4.0,),
+              new RotatedBox(quarterTurns: rotate, child: new Text('Rotate text'),)
             ],
           ),
         ),
