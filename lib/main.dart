@@ -1,60 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-
-enum Action { Increment, Decrement }
-
-int reducer(int state, dynamic action) {
-  if (action == Action.Increment) state++;
-  if (action == Action.Decrement) state--;
-  return state;
-}
 
 void main() {
-  final store = new Store<int>(reducer, initialState: 0);
-  runApp(
-    new MyApp(store: store),
-  );
+  runApp(new MaterialApp(
+    home: MyApp(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({Key key, this.store});
-  final Store<int> store;
+class MyApp extends StatefulWidget {
+  @override
+  State createState() => new _State();
+}
+
+class _State extends State<MyApp> {
+  bool _visible;
+
+  @override
+    void initState() {
+      // TODO: implement initState
+      _visible = false;
+    }
+
+  void _toggleVisible(){
+    setState(() {
+          _visible = !_visible;
+        });
+  }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return StoreProvider(
-      store: store,
-      child: new MaterialApp(
-        title: "Reudux Testing",
-        home: new Scaffold(
-          appBar: new AppBar(
-            title: Text('Flutter Redux'),
-          ),
-          body: new Container(
-            padding: EdgeInsets.all(32.0),
-            child: new Center(
-              child: new Column(
-                children: <Widget>[
-
-                  new StoreConnector<int, String>(
-                    builder: (BuildContext context, count) => new Text(
-                          count,
-                          style: new TextStyle(fontSize: 32.0),
-                        ),
-                    converter: (store) => store.state.toString(),
-                  ),
-
-                  new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new IconButton(icon: Icon(Icons.add), onPressed: () => store.dispatch(Action.Increment),),
-                      new IconButton(icon: Icon(Icons.remove), onPressed: () => store.dispatch(Action.Decrement),),
-                    ],
-                  )
-                ],
-              ),
-            ),
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text('Name Here'),
+      ),
+      body: new Container(
+        padding: new EdgeInsets.all(32.0),
+        child: new Center(
+          child: new Column(
+            children: <Widget>[
+              new Opacity(opacity: _visible ? 1.0: 0.2,
+              child: new Text('Now you see me?'),),
+              new RaisedButton(onPressed: _toggleVisible, child: new Text('Toggle'),),
+            ],
           ),
         ),
       ),
