@@ -12,27 +12,30 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
-class AnimatedLogo extends AnimatedWidget{
+class MyButton extends AnimatedWidget{
+  bool large = false;
+  static final _sizeTween = new Tween(begin: 1.0, end: 2.0);
+  AnimationController controller;
+  MyButton({Key key, Animation<double> animation, AnimationController controller}): super(key: key, listenable: animation)
+  {
+    this.controller = controller;
+  }
 
-  final _opacityTween = new Tween(begin: 0.1, end: 1.0);
-  final _rotateTween = new Tween(begin: 0.0, end: 12.0);
-  final _sizeTween = new Tween(begin: 0.0, end: 300.0);
-
-  AnimatedLogo({Key key, Animation<double> animation}) : super(key: key, listenable: animation);
+  void _press(){
+    if(large == false){
+      controller.forward();
+      large = true;
+    } else if(large = true) {
+      controller.reverse();
+      large = false;
+    }
+  }
 
   Widget build(BuildContext context){
-    final Animation<double> animation = listenable;
-    return new Transform.rotate(angle: _rotateTween.evaluate(animation), 
-    child: new Opacity(opacity: _opacityTween.evaluate(animation),
-    child: new Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      height: _sizeTween.evaluate(animation),
-      width: _sizeTween.evaluate(animation),
-      child: new Image.asset('images/lan.png'),
-    ),
-    )
+    Animation animation = listenable;
+    return Transform.scale(scale: _sizeTween.evaluate(animation),
+    child: RaisedButton(child: Text('Press Me'), onPressed: _press,)
     );
-
   }
 }
 
@@ -43,24 +46,8 @@ class _State extends State<MyApp> with TickerProviderStateMixin{
   @override
   void initState(){
     super.initState();
-    controller = new AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    controller = new AnimationController(vsync: this, duration: const Duration(milliseconds: 2000));
     animation = new CurvedAnimation(parent: controller, curve: Curves.easeIn);
-    animation.addStatusListener(listener);
-
-    controller.forward();
-  }
-
-  void listener(AnimationStatus status){
-    if(status == AnimationStatus.completed){
-      controller.reverse();
-    } else if (status == AnimationStatus.dismissed){
-      controller.forward();
-    }
-  }
-  @override
-  void dispose(){
-    controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -72,7 +59,12 @@ class _State extends State<MyApp> with TickerProviderStateMixin{
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
-          child: new AnimatedLogo(animation: animation),
+          child: new Column(
+            children: <Widget>[
+              new Text('All Widgets Here'),
+              new MyButton(animation: animation, controller: controller,)
+            ],
+          ),
         ),
       ),
     );
