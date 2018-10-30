@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -11,43 +12,31 @@ class MyApp extends StatefulWidget {
   State createState() => new _State();
 }
 
-class _painter extends CustomPainter{
+class _State extends State<MyApp> with SingleTickerProviderStateMixin {
+  Animation<double> animation;
+  AnimationController controller;
 
-@override
-void paint(Canvas canvas, Size size){
-  final radius = 100.0;
-  final Offset offset = new Offset(0.0, 50.0);
-  final Paint paint = new Paint()
-    ..isAntiAlias = true
-    ..strokeWidth = 10.0
-    ..color = Colors.blue[500]
-    ..style = PaintingStyle.stroke;
+  @override
+  void initState() {
+    super.initState();
+    controller = new AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    animation = new Tween(begin: 0.0, end: 300.0).animate(controller);
+    animation.addListener(() {
+      setState(() {
+        // Here
+      });
+    });
 
-  final Offset bodyStart = new Offset(0.0, 50.0);
-  final Offset bodyEnd = new Offset(0.0, 0.0);
-
-  canvas.drawCircle(bodyStart, radius, paint);
-  canvas.drawLine(bodyStart, bodyEnd, paint);
-
-  final Rect rect = new Rect.fromCircle(center: offset, radius: radius);
-  final Paint rectPaint = new Paint()
-    ..isAntiAlias = true
-    ..strokeWidth = 10.0
-    ..color = Colors.orange
-    ..style = PaintingStyle.stroke;
-
-  canvas.drawRect(rect, rectPaint);
-
-}
-
-@override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
-    return false;
+    controller.forward();
   }
-}
 
-class _State extends State<MyApp> {
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -56,14 +45,10 @@ class _State extends State<MyApp> {
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
-        child: new Center(
-          child: new Column(
-            children: <Widget>[
-              new Text('Hello', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32.0,),),
-              new CustomPaint(painter: new _painter()),
-            ],
-          ),
-        ),
+        height: animation.value,
+        width: animation.value,
+        child:  new FlutterLogo(size: 300.0,),
+
       ),
     );
   }
