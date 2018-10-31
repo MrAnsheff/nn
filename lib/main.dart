@@ -1,71 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
+
 
 void main() {
   runApp(new MaterialApp(
-    home: MyApp(),
+    home: new MyApp(),
   ));
 }
 
 class MyApp extends StatefulWidget {
   @override
-  State createState() => new _State();
+  _State createState() => new _State();
 }
 
-class MyButton extends AnimatedWidget{
-  bool large = false;
-  static final _sizeTween = new Tween(begin: 1.0, end: 2.0);
-  AnimationController controller;
-  MyButton({Key key, Animation<double> animation, AnimationController controller}): super(key: key, listenable: animation)
-  {
-    this.controller = controller;
-  }
-
-  void _press(){
-    if(large == false){
-      controller.forward();
-      large = true;
-    } else if(large = true) {
-      controller.reverse();
-      large = false;
-    }
-  }
-
-  Widget build(BuildContext context){
-    Animation animation = listenable;
-    return Transform.scale(scale: _sizeTween.evaluate(animation),
-    child: RaisedButton(child: Text('Press Me'), onPressed: _press,)
-    );
-  }
-}
-
-class _State extends State<MyApp> with TickerProviderStateMixin{
-  Animation animation;
-  AnimationController controller;
-
-  @override
-  void initState(){
-    super.initState();
-    controller = new AnimationController(vsync: this, duration: const Duration(milliseconds: 2000));
-    animation = new CurvedAnimation(parent: controller, curve: Curves.easeIn);
-  }
-
+class _State extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Name Here'),
+        title: new Text('Карта Краснодара'),
       ),
       body: new Container(
         padding: new EdgeInsets.all(32.0),
         child: new Center(
           child: new Column(
             children: <Widget>[
-              new Text('All Widgets Here'),
-              new MyButton(animation: animation, controller: controller,)
+              new Flexible(
+                  child: new FlutterMap(
+                    options: new MapOptions(
+                      center: new LatLng(45.07284, 38.97403),
+                      zoom: 16.0
+                    ),
+                    layers: [
+                      new TileLayerOptions(
+                        urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a','b','c'],
+                      )
+                    ],
+                  )
+              )
             ],
           ),
-        ),
+        )
       ),
     );
   }
