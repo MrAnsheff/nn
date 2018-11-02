@@ -1,83 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
 
 void main() {
   runApp(new MaterialApp(
-    home: new MyApp(),
+    home: MyApp(),
   ));
 }
 
 class MyApp extends StatefulWidget {
   @override
-  _State createState() => new _State();
+  State createState() => new _State();
 }
 
 class _State extends State<MyApp> {
-  List<LatLng> coords;
-  List<Marker> markers;
-  MapController controller;
+  void _showUrl(){
+    _launcher("http://ya.ru");
+  }
 
-  @override
-  void initState(){
-    coords = new List<LatLng>();
-    controller = new MapController();
-    coords.add(new LatLng(45.17284, 38.87403));
-    coords.add(new LatLng(45.16284, 38.88403));
-    coords.add(new LatLng(45.19284, 38.85403));
+  void _showEmail(){
+    _launcher("mailto:ansheff@bk.ru");
+  }
 
-    markers = new List<Marker>();
+  void _showPhone(){
+    _launcher("tel:89000000112");
+  }
 
-    for(var i = 0; i<coords.length; i++){
-      markers.add(
-        new Marker(
-          height: 80.0,
-          width: 80.0,
-          point: coords.elementAt(i),
-          builder: (ctx) => new Icon(Icons.pin_drop, color: Colors.blue),
-        )
-      );
+  void _showSms(){
+    _launcher("sms:89000000112");
+  }
+
+  void _launcher(String smth) async{
+    if(await canLaunch(smth)){
+      await launch(smth);
+    } else {
+      throw "We cant run this url";
     }
-
-  } 
-
-
-
+  }
   @override
   Widget build(BuildContext context) {
-   
-
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Карта Краснодара'),
+        title: new Text('Name Here'),
       ),
       body: new Container(
-        padding: new EdgeInsets.all(2.0),
+        padding: new EdgeInsets.all(32.0),
         child: new Center(
           child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              RaisedButton(onPressed: _showUrl, child: Text('URL')),
+              RaisedButton(onPressed: _showEmail, child: Text('E-MAIL')),
+              RaisedButton(onPressed: _showPhone, child: Text('PHONE')),
+              RaisedButton(onPressed: _showSms, child: Text('SMS')),
               
-              new Flexible(
-                  child: new FlutterMap(
-                    mapController: controller,
-                    options: new MapOptions(
-                      center: new LatLng(45.07284, 38.97403),
-                      zoom: 11.0
-                    ),
-                    layers: [
-                      new TileLayerOptions(
-                        urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                        subdomains: ['a','b','c'],
-                      ),
-                      new MarkerLayerOptions(markers: markers),
-                      new PolylineLayerOptions(polylines: [new Polyline(points: coords, color: Colors.green, strokeWidth: 4.0)]),
-                    ],
-                  )
-              )
             ],
           ),
-        )
+        ),
       ),
     );
   }
