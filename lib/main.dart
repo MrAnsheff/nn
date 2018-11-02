@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
+import 'package:simple_permissions/simple_permissions.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -14,29 +14,55 @@ class MyApp extends StatefulWidget {
 }
 
 class _State extends State<MyApp> {
-  void _showUrl(){
-    _launcher("http://ya.ru");
+  String status;
+  Permission permission;
+
+  @override
+  void initState(){
+    super.initState();
+    status = "Please choice the permission";
+    print(Permission.values);
   }
 
-  void _showEmail(){
-    _launcher("mailto:ansheff@bk.ru");
+  checkPermission() async{
+    final res = await SimplePermissions.checkPermission(permission);
+    setState((){
+      status = "${permission.toString()} = ${res.toString()}";
+    });
   }
 
-  void _showPhone(){
-    _launcher("tel:89000000112");
+  requestPermission() async{
+    final res = await SimplePermissions.requestPermission(permission);
+    setState((){
+      status = "${permission.toString()} = ${res.toString()}";
+    });
   }
 
-  void _showSms(){
-    _launcher("sms:89000000112");
+  getPermissionStatus() async{
+    final res = await SimplePermissions.getPermissionStatus(permission);
+    setState((){
+      status = "${permission.toString()} = ${res.toString()}";
+    });
   }
 
-  void _launcher(String smth) async{
-    if(await canLaunch(smth)){
-      await launch(smth);
-    } else {
-      throw "We cant run this url";
-    }
+  onDropdownChanged(Permission permission){
+    setState((){
+      this.permission = permission;
+      status = "Click a button below";
+    });
+
   }
+
+  List<DropdownMenuItem<Permission>> _getDropdownMenu(){
+    List<DropdownMenuItem<Permission>> items = new List<DropdownMenuItem<Permission>>();
+    Permission.values.forEach((permission){
+      var item = new DropdownMenuItem(child: Text(getPermissionString(permission)), value: permission,);
+      items.add(item);
+    });
+    return items;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -50,11 +76,12 @@ class _State extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(onPressed: _showUrl, child: Text('URL')),
-              RaisedButton(onPressed: _showEmail, child: Text('E-MAIL')),
-              RaisedButton(onPressed: _showPhone, child: Text('PHONE')),
-              RaisedButton(onPressed: _showSms, child: Text('SMS')),
-              
+              new Text(status),
+              DropdownButton(items: _getDropdownMenu(), onChanged: onDropdownChanged, value: permission,),
+              RaisedButton(onPressed: checkPermission, child: Text("Check Permission")),
+              RaisedButton(onPressed: requestPermission, child: Text("Request Permission")),
+              RaisedButton(onPressed: getPermissionStatus, child: Text("Get Status")),
+              RaisedButton(onPressed: SimplePermissions.openSettings, child: Text("Open Settings")),
             ],
           ),
         ),
